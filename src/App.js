@@ -10,6 +10,7 @@ import InfoSplash from './components/InfoSplash';
 import PlayGame from './components/PlayGame';
 import './components/NavBar.css';
 import './components/InfoSplash.css';
+import './components/PlayGame.css';
 import './App.css';
 //import { Route, Router } from 'react-router';
 

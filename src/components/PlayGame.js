@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 // speech recognition javascript
-var counter = 0;
+
+// game scoring system 
 
 export default class PlayGame extends Component {
 
     state = {
         words: [],
         recognising: false,
-        sentenceToGuess: ''
+        sentenceToGuess: {
+            targetWord: 'Test',
+            sentence: 'This is a test, this is a test'
+        }
     }
 
     componentDidMount() {
@@ -17,18 +21,47 @@ export default class PlayGame extends Component {
         this.reset();
         this.recognition.onend = this.reset;
 
+        // storing transformed string to array for game to work
+        var sentenceToGuessArr = this.state.sentenceToGuess.sentence.toLowerCase().replace(/[^A-Za-z0-9'\ ]/g, "").split(" ")
+        // setting state to iterable and no unwanted chars
+        this.setState({
+            sentenceToGuess: {
+                targetWord: 'Test',
+                sentence: sentenceToGuessArr
+            }
+        })
+
+        // checking if the value has been turned into an array 
+        // console.log(sentenceToGuessArr)
+
         this.recognition.onresult = (e) => {
-            var sentenceToGuessArr = this.state.sentenceToGuess.replace(/[^A-Za-z0-9]/, "").split(' ')
-            console.log(this.state.words)
-            counter++
+            var sentenceToGuessArrNew = this.state.sentenceToGuess.sentence
+            //console.log(this.state.sentenceToGuess.sentence)
+
+            // old method of filtering out any spaces that may be in an array
+            // sentenceToGuessArr = sentenceToGuessArr.filter(elm => {
+            //     if (elm) {
+            //         return elm
+            //     }
+            // })
+            console.log(sentenceToGuessArrNew)
             var final = [];
             for (var i = 0; i < e.results.length; i++) {
                 var finalWordArr = e.results[i][0].transcript.split(' ')
-                console.log('speaking')
                 final = final.concat(finalWordArr
                     .filter(word => word.length)
                     .map(wrd => {
-                        if (sentenceToGuessArr.indexOf(wrd) >= 0) {
+                        if (sentenceToGuessArrNew.indexOf(wrd) >= 0) {
+                            this.setState({
+                                sentenceToGuess: {
+                                    targetWord: 'Test',
+                                    sentence: sentenceToGuessArrNew.filter((el, indx) => {
+                                        if (indx !== sentenceToGuessArrNew.indexOf(wrd)) {
+                                            return el
+                                        }
+                                    })
+                                }
+                            })
                             return {
                                 word: wrd,
                                 class: 'matched-word'
@@ -38,15 +71,6 @@ export default class PlayGame extends Component {
                         }
                     })
                 )
-                    // var finalArr = finalWordArr.map(wrd => {
-                    //     if (wrd === '') {
-                    //     } else if (guessingWordsArr.indexOf(wrd) >= 0) {
-                    //         return `<span style={color: green}>${wrd}</span>`
-                    //     } else {
-                    //         return wrd 
-                    //     }
-                    // })
-                    // final += finalArr.join(" ");
             }
             this.setState((prevState, props) => { 
                 if (prevState.words.length > 10) {
@@ -108,8 +132,8 @@ export default class PlayGame extends Component {
                 <h1>Sentence you are guessing</h1>
                 <form>
                     <textarea
-                        value={this.state.sentenceToGuess}
-                        onChange={this.handleChange}
+                        value={this.state.sentenceToGuess.sentence}
+                        // onChange={this.handleChange}
                         maxLength="150"
                         cols="30"
                         rows="10">
