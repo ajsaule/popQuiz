@@ -22,7 +22,10 @@ export default class PlayGame extends Component {
         this.recognition.onend = this.reset;
 
         // storing transformed string to array for game to work
-        var sentenceToGuessArr = this.state.sentenceToGuess.sentence.toLowerCase().replace(/[^A-Za-z0-9'\ ]/g, "").split(" ")
+        var sentenceToGuessArr = this.state.sentenceToGuess.sentence
+            .toLowerCase()
+            .replace(/[^A-Za-z0-9'\ ]/g, "")
+            .split(" ")
         // setting state to iterable and no unwanted chars
         this.setState({
             sentenceToGuess: {
@@ -31,62 +34,68 @@ export default class PlayGame extends Component {
             }
         })
 
-        // checking if the value has been turned into an array 
-        // console.log(sentenceToGuessArr)
-
         this.recognition.onresult = (e) => {
-            var sentenceToGuessArrNew = this.state.sentenceToGuess.sentence
-            //console.log(this.state.sentenceToGuess.sentence)
-
-            // old method of filtering out any spaces that may be in an array
-            // sentenceToGuessArr = sentenceToGuessArr.filter(elm => {
-            //     if (elm) {
-            //         return elm
-            //     }
-            // })
-            console.log(sentenceToGuessArrNew)
-            var final = [];
+            console.log('worked')
+            const speechRecognitionList = e.results
+            
             for (var i = 0; i < e.results.length; i++) {
-                var finalWordArr = e.results[i][0].transcript.split(' ')
-                final = final.concat(finalWordArr
-                    .filter(word => word.length)
-                    .map(wrd => {
-                        if (sentenceToGuessArrNew.indexOf(wrd) >= 0) {
-                            this.setState({
-                                sentenceToGuess: {
-                                    targetWord: 'Test',
-                                    sentence: sentenceToGuessArrNew.filter((el, indx) => {
-                                        if (indx !== sentenceToGuessArrNew.indexOf(wrd)) {
-                                            return el
-                                        }
-                                    })
-                                }
-                            })
-                            return {
-                                word: wrd,
-                                class: 'matched-word'
-                            } 
-                        } else {
-                            return { word: wrd } 
-                        }
-                    })
-                )
+                let speechRecognitionTranscript = speechRecognitionList[i][0].transcript
+                this.assessSpokenWords(speechRecognitionTranscript)
             }
-            this.setState((prevState, props) => { 
-                if (prevState.words.length > 10) {
-                    console.log('finished');
-                    this.recognition.stop();
-                    return {
-                        recognising: false
-                    }
-                } else {
-                    return {
-                        words: final
-                    }
-                }
-            })
         }   
     }
+
+    assessSpokenWords(speechRecognitionTranscript) {
+        var finalWordArr = speechRecognitionTranscript.split(' ')
+        var sentenceToGuessArrNew = this.state.sentenceToGuess.sentence
+        // test to see the objects in state 
+        console.log(this.state.words)
+        var final = [];
+        final = final
+            .concat(finalWordArr
+                .filter(word => word.length)
+                .map(wrd => {
+                    // why do all instances of the words get removed from the Arr?
+                    // shouldn't only the first then second instance of the word arr get removed?
+                    if (sentenceToGuessArrNew.indexOf(wrd) >= 0) {
+                        // var sentence = sentenceToGuessArrNew.reduce((wordsThatMatch, word, idx) => {
+                            
+                        // })
+
+                        this.setState({
+                            sentenceToGuess: {
+                                targetWord: 'Test',
+                                sentence: sentenceToGuessArrNew.filter((el, indx) => {
+                                    if (indx !== sentenceToGuessArrNew.indexOf(wrd)) {
+                                        return el
+                                    }
+                                })
+                            }
+                        })
+                        return {
+                            word: wrd,
+                            class: 'matched-word'
+                        } 
+                    } else {
+                        return { word: wrd } 
+                    }
+                })      
+            )
+        this.setState((prevState, props) => { 
+            if (prevState.words.length > 10) {
+                console.log('finished');
+                this.recognition.stop();
+                return {
+                    recognising: false
+                }
+            } else {
+                return {
+                    words: final
+                }
+            }
+        })
+    }
+
 
     toggleStartStop = () => {
         if (this.state.recognising) {
