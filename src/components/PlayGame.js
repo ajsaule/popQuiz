@@ -10,9 +10,11 @@ export default class PlayGame extends Component {
         recognising: false,
         sentenceToGuess: {
             targetWord: 'Test',
-            sentence: 'This is a test, this is a test'
+            sentence: 'This is a test, this is a test',
+            wordsLeft: [],
+            score: 0
         }
-    }
+    }     
 
     componentDidMount() {
         this.recognition = new window.webkitSpeechRecognition();
@@ -35,10 +37,10 @@ export default class PlayGame extends Component {
         })
 
         this.recognition.onresult = (e) => {
-            console.log('worked')
+            console.log('fired')
             const speechRecognitionList = e.results
             
-            for (var i = 0; i < e.results.length; i++) {
+            for (var i = 0; i < speechRecognitionList.length; i++) {
                 let speechRecognitionTranscript = speechRecognitionList[i][0].transcript
                 this.assessSpokenWords(speechRecognitionTranscript)
             }
@@ -50,34 +52,32 @@ export default class PlayGame extends Component {
         var sentenceToGuessArrNew = this.state.sentenceToGuess.sentence
         // test to see the objects in state 
         console.log(this.state.words)
+        console.log(sentenceToGuessArr)
         var final = [];
         final = final
             .concat(finalWordArr
                 .filter(word => word.length)
-                .map(wrd => {
+                .map(word => {
                     // why do all instances of the words get removed from the Arr?
                     // shouldn't only the first then second instance of the word arr get removed?
-                    if (sentenceToGuessArrNew.indexOf(wrd) >= 0) {
-                        // var sentence = sentenceToGuessArrNew.reduce((wordsThatMatch, word, idx) => {
-                            
-                        // })
+                    if (sentenceToGuessArrNew.indexOf(word) >= 0) {
 
                         this.setState({
                             sentenceToGuess: {
                                 targetWord: 'Test',
-                                sentence: sentenceToGuessArrNew.filter((el, indx) => {
-                                    if (indx !== sentenceToGuessArrNew.indexOf(wrd)) {
+                                wordsLeft: sentenceToGuessArrNew.filter((el, indx) => {
+                                    if (indx !== sentenceToGuessArrNew.indexOf(word)) {
                                         return el
-                                    }
+                                    } 
                                 })
                             }
                         })
                         return {
-                            word: wrd,
+                            word: word,
                             class: 'matched-word'
                         } 
                     } else {
-                        return { word: wrd } 
+                        return { word: word } 
                     }
                 })      
             )
@@ -152,3 +152,8 @@ export default class PlayGame extends Component {
           )
     }
 }
+
+
+
+// comparison array 
+// actualSentenceArr.reduce((wordsThatMatch, word, idx) => word === transcriptArr[idx] ? [...wordsThatMatch, word] : wordsThatMatch, []).length
