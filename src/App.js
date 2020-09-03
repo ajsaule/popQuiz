@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 import NavBar from './components/NavBar';
 import InfoSplash from './components/InfoSplash';
-import PlayGame from './components/PlayGame';
+import PlayGame from './components/PlayGameTestTwo';
 import './components/NavBar.css';
 import './components/InfoSplash.css';
 import './components/PlayGame.css';

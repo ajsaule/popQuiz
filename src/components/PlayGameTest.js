@@ -48,6 +48,7 @@ export default class PlayGame extends Component {
                 let speechRecognitionTranscript = speechRecognitionList[i][0].transcript
                 var finalWordsResult = this.assessSpokenWords(speechRecognitionTranscript)
                 finalWordArr = finalWordArr.concat(finalWordsResult)
+                console.log(finalWordArr)
             }
             this.setState((prevState, props) => { 
                 if (prevState.words.length > 10) {
@@ -67,7 +68,6 @@ export default class PlayGame extends Component {
 
     assessSpokenWords(speechRecognitionTranscript) {
         var finalWordArr = speechRecognitionTranscript.split(' ')
-        console.log(finalWordArr)
         var sentenceToGuessArrNew = this.state.sentenceToGuess.sentence
         var wordsLeftToGuess = this.state.sentenceToGuess.wordsLeft
         // test to see the objects in state
@@ -81,11 +81,13 @@ export default class PlayGame extends Component {
                     if (wordsLeftToGuess.indexOf(word) >= 0) {
                         // filtering the array for non-matching words.. leaving first matching word out.
                         var wordsLeft = wordsLeftToGuess.filter((wrd, indx) => {
-                            if (indx !== wordsLeftToGuess.indexOf(word)) {
-                                return wrd
-                            } 
+                            var wordsLeft = []
+                            for (let i = 0; i < wordsLeftToGuess.length; i++) {
+                                if (i !== wordsLeftToGuess.indexOf(word)) {
+                                   wordsLeft.push(word) 
+                                }
+                            }
                         })
-                        console.log(wordsLeft)
                         this.setState({
                             sentenceToGuess: {
                                 targetWord: 'Test',
@@ -98,12 +100,12 @@ export default class PlayGame extends Component {
                             class: 'matched-word'
                         } 
                     } else {
-                        return { word: word } 
+                        return {
+                            word: word
+                        } 
                     }
                 })      
             )
-        // console.log(final)
-        // console.log(this.state.words)
         return final
     }
 
@@ -168,3 +170,16 @@ export default class PlayGame extends Component {
 
 // comparison array 
 // actualSentenceArr.reduce((wordsThatMatch, word, idx) => word === transcriptArr[idx] ? [...wordsThatMatch, word] : wordsThatMatch, []).length
+
+    
+    
+    
+    // comparison array 
+    // actualSentenceArr.reduce((wordsThatMatch, word, idx) => word === transcriptArr[idx] ? [...wordsThatMatch, word] : wordsThatMatch, []).length
+    
+    // var wordsLeft = []
+    // for (let i = 0; i < sentenceToGuessArrNew.length; i++) {
+    //     if (sentenceToGuessArrNew[i] === word) {
+            
+    //     }
+    // }
