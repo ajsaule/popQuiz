@@ -1,6 +1,6 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-[Check the demo out](https://popquizapp.surge.sh)
+[Check the demo out](https://popquizapp.surge.sh/)
 
 ## Available Scripts
 
