@@ -1,9 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Grandstander:ital,wght@1,300;1,900&display=swap');
+
 .nav-bar {
     display: flex;
     justify-content: space-between;
     height: 15%;
     padding: 2%;
     background-color: darkblue;
+}
+.nav-links-mid > *{
+    padding-left: 150px;
+    color: #e2b220;
+    text-decoration: none;
+    font-family: 'Grandstander', cursive;
+    font-weight: 900;
+}
+.nav-links > *{
+    padding-left: 50px;
+    color: #e2b220;
+    text-decoration: none;
+    font-family: 'Grandstander', cursive;
+    font-weight: 900;
 }
 
 .logo-img {

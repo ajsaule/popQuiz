@@ -9,8 +9,9 @@ export default class PlayGame extends Component {
     state = {
         spokenWords: '',
         recognising: false,
-        sentence: 'This is a test, this is a test'
+        sentence: 'GA is the best'
     }     
+    
 
     componentDidMount() {
         this.recognition = new window.webkitSpeechRecognition();
@@ -18,24 +19,6 @@ export default class PlayGame extends Component {
         // this.recognition.interimResults = true;
         this.reset();
         this.recognition.onend = this.reset;
-
-        // storing transformed string to array for game to work
-        // var sentenceToGuessArr = this.state.sentenceToGuess.sentence
-        //     .toLowerCase()
-        //     .replace(/[^A-Za-z0-9'\ ]/g, "")
-        //     .split(" ")
-        // var wordsLeftArr = this.state.sentenceToGuess.wordsLeft
-        //     .toLowerCase()
-        //     .replace(/[^A-Za-z0-9'\ ]/g, "")
-        //     .split(" ")
-        // setting state to iterable and no unwanted chars
-        // this.setState({
-        //     sentenceToGuess: {
-        //         targetWord: 'Test',
-        //         sentence: sentenceToGuessArr,
-        //         wordsLeft: wordsLeftArr
-        //     }
-        // })
 
         this.recognition.onresult = (e) => {
             console.log('fired')
@@ -91,15 +74,16 @@ export default class PlayGame extends Component {
         })
     }
 
-    // handleChange = (e) => {
-    //     e.preventDefault()
-    //     this.setState({
-    //         sentenceToGuess: e.target.value
-    //     })
-    // }
 
     render() {
-        return(
+        const sentenceLength = this.state.sentence.split(" ").length 
+        const wordsLeft = this.wordsLeft(this.state.spokenWords)
+            .split(" ")
+            .filter(wrd => wrd)
+            .length
+        const percentageComplete = `${wordsLeft / sentenceLength * 100}%`
+
+        return (
             <div>
               <h1>Speech recognition prototype</h1>
               <p>Click the button and test speech output to the screen</p>
@@ -111,10 +95,13 @@ export default class PlayGame extends Component {
                 <p>Output voice text should go under here: </p>
                 <p>{this.state.spokenWords}</p>
                 <h1>Sentence you are guessing</h1>
+                <div className="progress-bar">
+                    <div style={{ height: percentageComplete }}></div>
+                </div>
                 <form>
                     <textarea
                         value={this.wordsLeft(this.state.spokenWords)}
-                        // onChange={this.handleChange}
+                        onChange={this.handleChange}
                         maxLength="150"
                         cols="30"
                         rows="10">

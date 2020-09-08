@@ -27,8 +27,10 @@ export default class NavBar extends Component {
                 <Link to="/">
                 <img className="logo-img" src={require("./pop-quiz.png")} alt="Logo" />
                 </Link>
-                <Link to="/quizzes">Quizzes</Link>
-                <div>
+                <div className="nav-links-mid">
+                    <Link to="/quizzes">Quizzes</Link>
+                </div>
+                <div className="nav-links">
                     <Link to="/login">Login</Link>
                     <Link to="/signup">Signup</Link>
                     {/* If logged in/ session is active */}
